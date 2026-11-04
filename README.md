@@ -52,14 +52,13 @@ Without the indexer, the backend would either need to query the chain on every A
 | Layer | Technology |
 |-------|-----------|
 | Runtime | Node.js 20+, TypeScript |
-| Chain listening (EVM) | `viem` — `watchContractEvent` for real-time event streaming |
-| Chain listening (Stellar) | Stellar SDK — Soroban event stream / Horizon server-sent events |
+| Chain listening (Stellar) | Stellar RPC `getEvents` — Soroban contract event ingestion |
 | Database | PostgreSQL (same instance as backend, separate schema) |
 | Queue | Redis (optional — for buffering high-volume events) |
 | Restart safety | Persists last processed block number to resume after restarts |
 | Deployment | Docker, Railway, or Fly.io |
 
-> **Chain path decision:** If ByteChain moves to EVM (Ethereum, Polygon, Base), this service uses `viem`. If it stays on Stellar, it uses the Stellar Horizon event stream. The architecture is the same either way.
+> **Chain path decision:** ByteChain uses Stellar Soroban. This service polls Stellar RPC `getEvents` for contract events; it does not use EVM `viem` or Horizon server-sent events. See [`docs/event-ingestion.md`](docs/event-ingestion.md) for the ingestion and DB write model design.
 >
 > ---
 >
